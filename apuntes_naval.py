@@ -19,16 +19,17 @@
 
 CORRECIONES:
 + Puntajes
-
-+ PASAR SIEMPRE EN LAS FUNCIONES LOS PARAMETROS! 
-+ Llevar todas las funciones a biblioteca_funciones
 + El nombre del usuario puede ser guardado al principio o al salir y finalizar la partida.
-- Refactorizar funcion enumerate(), no se puede usar eso.
+- Agregar el boton de volver al menu principal
++! Al ir y volver de las pantallas, desabilitar los botones y tablero
+
+- PASAR SIEMPRE EN LAS FUNCIONES LOS PARAMETROS! 
+- Llevar todas las funciones a biblioteca_funciones
+- Refactorizar funcion enumerate()
 - Cambiar el tablero que no se vean los barcos
 - Imagen de fondo para el tablero
 - Sacar boton ver puntajes en la pantalla del tablero y directamte mostrarlo 
 - Colores para los casilleros del tablero
-- Agregar el boton de volver al menu principal
 - Minusculas para todas las variables
 """
 
