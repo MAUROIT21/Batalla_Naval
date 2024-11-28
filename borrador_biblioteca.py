@@ -310,4 +310,94 @@ barco_rect['id':id_barco]
 barco_rect['fila':fila]
 barco_rect['columna':columna] 
 """
-                
+# Posible solución para las partes hundidas
+def ubicar_barcos_aleatoriamente(flota: list, matriz: list, filas: int, columnas: int):
+    cont_lleno = 0
+    cont_libre = 0
+    puntaje_total = 0  # Variable para acumular el puntaje total
+    barcos_hundidos = {}  # Diccionario para hacer el seguimiento de partes hundidas por barco
+    
+    for i in range(len(flota)):  # tipos de barcos
+        for j in range(len(flota[i])):  # barcos por tipo
+            barco = flota[i][j]
+            largo_barco = barco['tamaño']
+            
+            # Inicializamos el barco en el diccionario de hundidos
+            barcos_hundidos[barco['id']] = {'total_partes': largo_barco, 'partes_hundidas': 0}
+            
+            # Ubico el barco en la matriz
+            match largo_barco:
+                case 1:
+                    casillero_libre = False
+                    while not casillero_libre:
+                        posicion = generar_pos_aleatoria(filas, columnas)
+                        pos_fila, pos_columna = posicion[0], posicion[1]
+
+                        if matriz[pos_fila][pos_columna] == 0:
+                            cont_libre += 1
+                            casillero_libre = True
+                            matriz[pos_fila][pos_columna] = 1
+                        else:
+                            cont_lleno += 1
+
+                case 2:
+                    casillero_libre = False
+                    while not casillero_libre:
+                        posicion = generar_pos_aleatoria(filas, columnas)
+                        pos_fila, pos_columna = posicion[0], posicion[1]
+                        while pos_columna == 9:
+                            posicion = generar_pos_aleatoria(filas, columnas)
+                            pos_fila, pos_columna = posicion[0], posicion[1]
+
+                        if matriz[pos_fila][pos_columna] == 0 and matriz[pos_fila][pos_columna + 1] == 0:
+                            cont_libre += 1
+                            casillero_libre = True
+                            matriz[pos_fila][pos_columna] = 2
+                            matriz[pos_fila][pos_columna + 1] = 2
+                        else:
+                            cont_lleno += 1
+
+                case 3:
+                    casillero_libre = False
+                    while not casillero_libre:
+                        posicion = generar_pos_aleatoria(filas, columnas)
+                        pos_fila, pos_columna = posicion[0], posicion[1]
+                        while pos_columna == 8 or pos_columna == 9:
+                            posicion = generar_pos_aleatoria(filas, columnas)
+                            pos_fila, pos_columna = posicion[0], posicion[1]
+
+                        if matriz[pos_fila][pos_columna] == 0 and matriz[pos_fila][pos_columna + 1] == 0 and matriz[pos_fila][pos_columna + 2] == 0:
+                            cont_libre += 1
+                            casillero_libre = True
+                            matriz[pos_fila][pos_columna] = 3
+                            matriz[pos_fila][pos_columna + 1] = 3
+                            matriz[pos_fila][pos_columna + 2] = 3
+                        else:
+                            cont_lleno += 1
+
+                case 4:
+                    casillero_libre = False
+                    while not casillero_libre:
+                        posicion = generar_pos_aleatoria(filas, columnas)
+                        pos_fila, pos_columna = posicion[0], posicion[1]
+                        while pos_columna == 7 or pos_columna == 8 or pos_columna == 9:
+                            posicion = generar_pos_aleatoria(filas, columnas)
+                            pos_fila, pos_columna = posicion[0], posicion[1]
+
+                        if matriz[pos_fila][pos_columna] == 0 and matriz[pos_fila][pos_columna + 1] == 0 and matriz[pos_fila][pos_columna + 2] == 0 and matriz[pos_fila][pos_columna + 3] == 0:
+                            cont_libre += 1
+                            casillero_libre = True
+                            matriz[pos_fila][pos_columna] = 4
+                            matriz[pos_fila][pos_columna + 1] = 4
+                            matriz[pos_fila][pos_columna + 2] = 4
+                            matriz[pos_fila][pos_columna + 3] = 4
+                        else:
+                            cont_lleno += 1
+
+    # Aquí puedes calcular el puntaje total según las partes hundidas
+    for barco_id, info in barcos_hundidos.items():
+        if info['partes_hundidas'] == info['total_partes']:
+            puntaje_total += info['total_partes'] * 10  # 10 puntos por cada parte hundida del barco
+
+    return matriz, puntaje_total
+             
