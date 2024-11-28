@@ -401,3 +401,43 @@ def ubicar_barcos_aleatoriamente(flota: list, matriz: list, filas: int, columnas
 
     return matriz, puntaje_total
              
+
+def calcular_puntaje_disparo(matriz: list, fila: int, columna: int, barcos: list, puntaje_actual: int):
+    """
+    Calcula el puntaje basado en un disparo en la batalla naval.
+    
+    Parámetros:
+        matriz (list): La matriz que representa el tablero de la batalla naval.
+        fila (int): La fila donde se realizó el disparo.
+        columna (int): La columna donde se realizó el disparo.
+        barcos (list): La lista de barcos, donde cada barco tiene un 'id' y un 'tamaño'.
+        puntaje_actual (int): El puntaje actual acumulado del jugador.
+    
+    Retorna:
+        int: El puntaje actualizado después del disparo.
+    """
+    if matriz[fila][columna] == 0:  # Agua
+        print("¡Toque agua!")
+        return puntaje_actual - 1  # Restar 1 por tocar agua
+
+    # Si toca un barco
+    elif matriz[fila][columna] > 0:  # Toca una parte de barco
+        barco_tocado = matriz[fila][columna]  # El valor en la matriz representa el tipo de barco (1, 2, 3, 4)
+        puntaje_actual += 5  # 5 puntos por acertar una parte de barco
+        print(f"¡Acertaste un barco de tipo {barco_tocado}!")
+
+        # Aquí podemos actualizar los barcos, por ejemplo, disminuir la cantidad de partes restantes
+        # Esto es útil si queremos llevar un registro de cuántas partes de cada barco han sido tocadas
+        # Actualizamos el puntaje adicional si el barco es hundido
+
+        for barco in barcos:
+            if barco['id'] == barco_tocado:
+                barco['partes_hundidas'] += 1  # Contabilizamos una parte hundida
+
+                # Si todas las partes del barco están hundidas, sumamos 10 puntos extra por parte hundida
+                if barco['partes_hundidas'] == barco['tamaño']:
+                    puntaje_actual += barco['tamaño'] * 10  # Sumar 10 puntos por cada parte hundida del barco
+
+        return puntaje_actual
+    
+    return puntaje_actual
