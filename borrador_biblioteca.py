@@ -295,12 +295,6 @@ def saliendo(nick:str)-> str:
 
  """
 
-partes_barcos = ['popa', 'proa', 'estribor', 'babor']
-for i in range (len(partes_barcos)):
-    cada_parte = partes_barcos[i]
-    print(f'{i} -- {cada_parte}')
-
-print(len(partes_barcos))
 
 """ barco_rect = {}
 barco_rect['x':rect_tablero.x]
@@ -311,3 +305,189 @@ barco_rect['fila':fila]
 barco_rect['columna':columna] 
 """
                 
+### funcion original
+""" def ubicar_barcos_aleatoriamente(flota:list, matriz:list, filas:int, columnas:int):
+    cont_lleno = 0
+    cont_libre = 0
+    for i in range (len(flota)): # tipos de barcos
+        for j in range (len(flota[i])): # barcos por tipo
+            # tomo un barco y su tamaño
+            barco = flota[i][j]
+            largo_barco = flota[i][j]['tamaño']
+
+            # una vez que tengo un barco de la flota, lo ubico aleatoriamente en la matriz
+            # necesito *generar una posicion(fila, columna) random y *validar si se puede ubicar ahi.           
+            # ubico el barco en la posicion generada
+            match largo_barco:
+                case 1:
+                    casillero_libre = False
+                    while casillero_libre == False:
+                        posicion = generar_pos_aleatoria(filas, columnas)
+                        pos_fila = posicion[0]
+                        pos_columna = posicion[1]
+
+                        if matriz[pos_fila][pos_columna] == 0:
+                            cont_libre += 1 
+                            casillero_libre = True # Si el casillero esta vacio
+                            matriz[pos_fila][pos_columna] = 1 # ubico el barco
+                        else:
+                            cont_lleno += 1
+                    
+                case 2:
+                    casillero_libre = False
+                    while casillero_libre == False:
+                    
+                        posicion = generar_pos_aleatoria(filas, columnas)
+                        pos_fila = posicion[0]
+                        pos_columna = posicion[1]
+                        while pos_columna == 9:
+                            posicion = generar_pos_aleatoria(filas, columnas)
+                            pos_fila = posicion[0]
+                            pos_columna = posicion[1]
+
+                        if matriz[pos_fila][pos_columna] == 0 and matriz[pos_fila][pos_columna+1] == 0:
+                            cont_libre += 1 
+                            casillero_libre = True # Si el casillero esta vacio
+                            matriz[pos_fila][pos_columna] = 2 
+                            matriz[pos_fila][pos_columna+1] = 2 
+                        else:
+                            cont_lleno += 1
+             
+                case 3:
+                    casillero_libre = False
+                    while casillero_libre == False:
+                    
+                        posicion = generar_pos_aleatoria(filas, columnas)
+                        pos_fila = posicion[0]
+                        pos_columna = posicion[1]
+                        while pos_columna == 8 or pos_columna == 9:
+                            posicion = generar_pos_aleatoria(filas, columnas)
+                            pos_fila = posicion[0]
+                            pos_columna = posicion[1]
+                        
+                        if matriz[pos_fila][pos_columna] == 0 and matriz[pos_fila][pos_columna+1] == 0 and matriz[pos_fila][pos_columna+2] == 0:
+                            cont_libre += 1 
+                            casillero_libre = True # Si el casillero esta vacio
+                            matriz[pos_fila][pos_columna] = 3 
+                            matriz[pos_fila][pos_columna+1] = 3 
+                            matriz[pos_fila][pos_columna+2] = 3
+                        else:
+                            cont_lleno += 1
+                case 4:
+                    casillero_libre = False
+                    while casillero_libre == False:
+                    
+                        posicion = generar_pos_aleatoria(filas, columnas)
+                        pos_fila = posicion[0]
+                        pos_columna = posicion[1]
+                        while pos_columna == 7 or pos_columna == 8 or pos_columna == 9:
+                            posicion = generar_pos_aleatoria(filas, columnas)
+                            pos_fila = posicion[0]
+                            pos_columna = posicion[1]
+                        
+                        if matriz[pos_fila][pos_columna] == 0 and matriz[pos_fila][pos_columna+1] == 0 and matriz[pos_fila][pos_columna+2] == 0 and matriz[pos_fila][pos_columna+3] == 0:
+                            cont_libre += 1 
+                            casillero_libre = True # Si el casillero esta vacio
+                            matriz[pos_fila][pos_columna] = 4 
+                            matriz[pos_fila][pos_columna+1] = 4 
+                            matriz[pos_fila][pos_columna+2] = 4
+                            matriz[pos_fila][pos_columna+3] = 4
+                            
+                        else:
+                            cont_lleno += 1
+    return matriz    
+
+ """
+
+
+
+""" 
+lista_posiciones_barcos = []
+posicion_parte_barco = (pos_fila, pos_columna)
+parte_del_barco = (1, 4) # parte 1 de 4 totales
+# necesito generar un id para cada barco (pero un barco puede tener el mismo id para varias partes del mismo barco.)
+barco_datos = {'id_barco':id_barco, 'coordenadas':posicion_parte_barco, 'partes_del_barco':parte_del_barco}
+lista_posiciones_barcos.append(barco_datos)
+ """
+
+####### LABURAR SOBRE ESTE CODIGO >>>> 
+
+""" 
+import random  # Necesario para generar IDs si no lo tienes definido
+
+def ubicar_barcos_aleatoriamente_MODIFICADA(flota: list, matriz: list, filas: int, columnas: int):
+    cont_lleno = 0
+    cont_libre = 0
+    lista_posiciones_barcos = []  # Lista para almacenar los datos de los barcos
+    id_barco = 1  # ID inicial para los barcos
+
+    for i in range(len(flota)):  # tipos de barcos
+        for j in range(len(flota[i])):  # barcos por tipo
+            # Tomo un barco y su tamaño
+            barco = flota[i][j]
+            largo_barco = flota[i][j]['tamaño']
+
+            # Ubico el barco en la matriz
+            casillero_libre = False
+            while not casillero_libre:
+                posicion = generar_pos_aleatoria(filas, columnas)
+                pos_fila, pos_columna = posicion
+
+                # Validar espacios según el tamaño del barco
+                if largo_barco == 1:
+                    if matriz[pos_fila][pos_columna] == 0:
+                        casillero_libre = True
+                        matriz[pos_fila][pos_columna] = largo_barco
+                        lista_posiciones_barcos.append({
+                            'id_barco': id_barco,
+                            'coordenadas': (pos_fila, pos_columna),
+                            'partes_del_barco': (1, 1)  # Parte 1 de 1
+                        })
+                elif largo_barco == 2:
+                    if pos_columna < columnas - 1 and matriz[pos_fila][pos_columna] == 0 and matriz[pos_fila][pos_columna + 1] == 0:
+                        casillero_libre = True
+                        for parte in range(largo_barco):
+                            matriz[pos_fila][pos_columna + parte] = largo_barco
+                            lista_posiciones_barcos.append({
+                                'id_barco': id_barco,
+                                'coordenadas': (pos_fila, pos_columna + parte),
+                                'partes_del_barco': (parte + 1, largo_barco)
+                            })
+                elif largo_barco == 3:
+                    if pos_columna < columnas - 2 and all(matriz[pos_fila][pos_columna + k] == 0 for k in range(largo_barco)):
+                        casillero_libre = True
+                        for parte in range(largo_barco):
+                            matriz[pos_fila][pos_columna + parte] = largo_barco
+                            lista_posiciones_barcos.append({
+                                'id_barco': id_barco,
+                                'coordenadas': (pos_fila, pos_columna + parte),
+                                'partes_del_barco': (parte + 1, largo_barco)
+                            })
+                elif largo_barco == 4:
+                    if pos_columna < columnas - 3 and all(matriz[pos_fila][pos_columna + k] == 0 for k in range(largo_barco)):
+                        casillero_libre = True
+                        for parte in range(largo_barco):
+                            matriz[pos_fila][pos_columna + parte] = largo_barco
+                            lista_posiciones_barcos.append({
+                                'id_barco': id_barco,
+                                'coordenadas': (pos_fila, pos_columna + parte),
+                                'partes_del_barco': (parte + 1, largo_barco)
+                            })
+            id_barco += 1  # Incremento el ID para el siguiente barco
+    return matriz, lista_posiciones_barcos
+ """
+
+
+
+""" partes_barcos = ['popa', 'proa', 'estribor', 'babor']
+for i in range (len(partes_barcos)):
+    cada_parte = partes_barcos[i]
+    print(f'{i} -- {cada_parte}')
+print(len(partes_barcos))
+ """
+ 
+""" largo_barco = 4
+for parte in range(largo_barco):
+    print(parte) """
+
+print(len(range(10)))

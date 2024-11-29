@@ -93,7 +93,7 @@ while corriendo:
                 pass
 
             if estado_pantalla == 'cargado':
-                click_tablero(coordenadas_click, tamaño_tablero, ancho_casillero, ANCHO_PANTALLA, ALTO_PANTALLA, barcos_casilleros, matriz_datos, puntajes, usuario, barcos_averiados, ventana, puntaje_actual,  x_puntajes, y_puntajes, color_barco_tocado, color_agua)
+                click_tablero(coordenadas_click, tamaño_tablero, ancho_casillero, ANCHO_PANTALLA, ALTO_PANTALLA, barcos_casilleros, matriz_datos, puntajes, usuario, barcos_averiados, ventana, puntaje_actual, x_puntajes, y_puntajes, color_barco_tocado, color_agua, partes_barco_coordenadas)
                 
             if volver_menu.collidepoint(coordenadas_click):
                 estado_pantalla = 'inicio'
@@ -136,10 +136,10 @@ while corriendo:
 
             datos_retorno_jugando = jugando(tamaño_tablero, ancho_casillero, ventana, imagen_fondo_oceano, nivel, jugar, puntajes_historicos, salir, ANCHO_PANTALLA, ALTO_PANTALLA, color_boton_salir, color_boton_puntaje, salir_jugando, puntaje_actual, reiniciar_jugando, volver_menu, x_puntajes, x_boton_derecha, y_puntajes, y_boton_derecha)
             matriz_datos = datos_retorno_jugando[0]
-            barcos_casilleros = datos_retorno_jugando[2]
-            barcos_averiados = datos_retorno_jugando[3]
+            barcos_casilleros = datos_retorno_jugando[1]
+            barcos_averiados = datos_retorno_jugando[2]
+            partes_barco_coordenadas = datos_retorno_jugando[3]
             estado_pantalla = 'cargado'
-
             
         case 'cargado':
             pass
