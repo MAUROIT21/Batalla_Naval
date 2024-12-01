@@ -9,9 +9,14 @@ from colores_naval import *
 def sonido_juego ():
     mixer.init()
     ruta_musica = 'teoria_juegos/Batalla_Naval/archivos_naval/naval_music.mp3'
-    sonido = mixer.Sound(ruta_musica)
-    sonido.set_volume(0.4)
+    #sonido = mixer.Sound(ruta_musica)
+    #sonido.set_volume(0.4)
     #sonido.play()
+    
+     # Cargar y reproducir música en bucle
+    mixer.music.load(ruta_musica)
+    mixer.music.set_volume(0.5)
+    #mixer.music.play(loops=-1)  # -1 indica reproducción infinita
 
 # Inicializa matriz
 def inicializar_matriz (filas: int, columnas:int, valor_inicial: any):
@@ -36,9 +41,10 @@ def saliendo(nick:str)-> str:
 
 
 
-def menu_juego(ventana, imagen_barcos, nivel, jugar, puntajes_historicos, salir, color_boton_nivel, color_boton_jugar, color_boton_puntaje, color_boton_salir, y_boton, x_boton):
+def menu_juego(ventana, imagen_barcos, nivel, jugar, puntajes_historicos, salir, color_boton_nivel, color_boton_jugar, color_boton_puntaje, color_boton_salir, y_boton, x_boton, salir_jugando, puntaje_actual, reiniciar_jugando, volver_menu, usuario_caja_texto, ANCHO_PANTALLA):
     ventana.blit(imagen_barcos, (0,0)) # Imagen de Fondo
     imagen_barcos.set_alpha(255)
+    botones_jugando_inactivos(salir_jugando, puntaje_actual, reiniciar_jugando, volver_menu, usuario_caja_texto, ANCHO_PANTALLA)
     botones_menu_activos(nivel, jugar, puntajes_historicos, salir, x_boton)
     pygame.draw.rect(ventana, color_boton_nivel, nivel) # con el objeto nivel, dibuja el rectangulo
     pygame.draw.rect(ventana, color_boton_jugar, jugar)
@@ -59,12 +65,13 @@ def menu_juego(ventana, imagen_barcos, nivel, jugar, puntajes_historicos, salir,
     return usuario
 
 
-def dibujar_botones_juego(ventana:pygame.Surface, color_boton_salir, color_boton_puntaje, salir_jugando, puntaje_actual, reiniciar_jugando, volver_menu, x_puntajes, x_boton_derecha, y_puntajes, y_boton_derecha):
+def dibujar_botones_juego(ventana:pygame.Surface, color_boton_salir, color_boton_puntaje, salir_jugando, puntaje_actual, reiniciar_jugando, volver_menu, x_puntajes, x_boton_derecha, y_puntajes, y_boton_derecha, usuario_caja_texto, color_usuario_boton):
     # Botones a la derecha del tablero    
     pygame.draw.rect(ventana, color_boton_salir, salir_jugando)
     pygame.draw.rect(ventana, color_boton_puntaje, puntaje_actual)
     pygame.draw.rect(ventana, color_boton_salir, reiniciar_jugando)
     pygame.draw.rect(ventana, color_boton_salir, volver_menu)
+    pygame.draw.rect(ventana, color_usuario_boton, usuario_caja_texto)
 
     txt_puntaje_actual = fuente_puntaje_actual.render('0000', False, color_letra_puntaje)
     ventana.blit(txt_puntaje_actual, (x_puntajes + 35, y_puntajes + 15))
@@ -74,6 +81,13 @@ def dibujar_botones_juego(ventana:pygame.Surface, color_boton_salir, color_boton
     ventana.blit(txt_reiniciar_jugando, (x_boton_derecha + 22, y_boton_derecha + 110))
     txt_volver_menu = fuente_botones.render('Volver', False, color_letra_botones)
     ventana.blit(txt_volver_menu, (x_boton_derecha + 30, y_boton_derecha + 210))
+    txt_usuario_boton = fuente_botones.render('Ingrese su usuario aqui: ', False, color_letra_botones)
+    ventana.blit(txt_usuario_boton, (x_puntajes + 253, y_puntajes + 15))
+    
+def interactua_boton_usuario (ventana, x_puntajes, y_puntajes, usuario_caja_texto):
+    pygame.draw.rect(ventana, color_usuario_boton, usuario_caja_texto)
+    txt_usuario_boton = fuente_botones.render(' ', False, color_letra_botones)
+    ventana.blit(txt_usuario_boton, (x_puntajes + 253, y_puntajes + 15))
 
 # Botones del menu inactivos
 def botones_menu_inactivos(nivel, jugar, puntajes_historicos, salir, ANCHO_PANTALLA):
@@ -90,22 +104,39 @@ def botones_menu_activos (nivel, jugar, puntajes_historicos, salir, x_boton):
     puntajes_historicos.x = x_boton + 300
     salir.x = x_boton + 450
 
+def botones_jugando_inactivos(salir_jugando, puntaje_actual, reiniciar_jugando, volver_menu, usuario_caja_texto, ANCHO_PANTALLA):
+    # LOS SACO DE LA PANTALLA
+    salir_jugando.x = ANCHO_PANTALLA+1000
+    puntaje_actual.x = ANCHO_PANTALLA+1000
+    reiniciar_jugando.x = ANCHO_PANTALLA+1000
+    volver_menu.x = ANCHO_PANTALLA+1000
+    usuario_caja_texto.x = ANCHO_PANTALLA+1000
+
+def botones_jugando_activos(salir_jugando, puntaje_actual, reiniciar_jugando, volver_menu, usuario_caja_texto, ANCHO_PANTALLA, x_puntajes, x_boton_derecha):
+    # LOS SACO DE LA PANTALLA
+    salir_jugando.x = x_boton_derecha
+    puntaje_actual.x = x_puntajes
+    reiniciar_jugando.x = x_boton_derecha
+    volver_menu.x = x_boton_derecha
+    usuario_caja_texto.x = x_puntajes + 250
 
 
-def jugando (tamaño_tablero, ancho_casillero, ventana, imagen_fondo_oceano, nivel, jugar, puntajes_historicos, salir, ANCHO_PANTALLA, ALTO_PANTALLA, color_boton_salir, color_boton_puntaje, salir_jugando, puntaje_actual, reiniciar_jugando, volver_menu, x_puntajes, x_boton_derecha, y_puntajes, y_boton_derecha):
+
+def jugando (tamaño_tablero, ancho_casillero, ventana, imagen_fondo_oceano, nivel, jugar, puntajes_historicos, salir, ANCHO_PANTALLA, ALTO_PANTALLA, color_boton_salir, color_boton_puntaje, salir_jugando, puntaje_actual, reiniciar_jugando, volver_menu, x_puntajes, x_boton_derecha, y_puntajes, y_boton_derecha, usuario_caja_texto, color_usuario_boton):
     ventana.fill(fondo_ventana) # detras de la imagen fondo negro
     ventana.blit(imagen_fondo_oceano, (0,0)) # imagen fondo del tablero 
     botones_menu_inactivos(nivel, jugar, puntajes_historicos, salir, ANCHO_PANTALLA) # Desactiva los botones del menu al comenzar el juego
-    dibujar_botones_juego(ventana, color_boton_salir, color_boton_puntaje, salir_jugando, puntaje_actual, reiniciar_jugando, volver_menu, x_puntajes, x_boton_derecha, y_puntajes, y_boton_derecha)
+    botones_jugando_activos(salir_jugando, puntaje_actual, reiniciar_jugando, volver_menu, usuario_caja_texto, ANCHO_PANTALLA, x_puntajes, x_boton_derecha)
+    dibujar_botones_juego(ventana, color_boton_salir, color_boton_puntaje, salir_jugando, puntaje_actual, reiniciar_jugando, volver_menu, x_puntajes, x_boton_derecha, y_puntajes, y_boton_derecha, usuario_caja_texto, color_usuario_boton)
     matriz_barcos_posiciones_ubicados = a_jugar() # Se genera la logica del juego.
     matriz_barcos_ubicados = matriz_barcos_posiciones_ubicados[0]
     partes_barco_coordenadas = matriz_barcos_posiciones_ubicados[1]  
     retorno_lista_rects = dibuja_tablero(tamaño_tablero, ancho_casillero, ventana, posicion_x=ANCHO_PANTALLA/5, posicion_y=ALTO_PANTALLA/7, matriz_barcos= matriz_barcos_ubicados, partes_barcos_coordenadas= partes_barco_coordenadas) # Se prepara el tablero
-    #lista_rects_generados = retorno_lista_rects[0] 
     casilleros_xy_valor = retorno_lista_rects[0]
     barcos_averiados = retorno_lista_rects[1]
+    rectangulos = retorno_lista_rects[2]
     
-    datos_retorno = [matriz_barcos_ubicados, casilleros_xy_valor, barcos_averiados, partes_barco_coordenadas]
+    datos_retorno = [matriz_barcos_ubicados, casilleros_xy_valor, barcos_averiados, partes_barco_coordenadas, rectangulos]
     return datos_retorno
 # datos_retorno[0] >> una lista de 2 listas
 
@@ -115,94 +146,6 @@ def generar_pos_aleatoria (filas:int, columnas:int)-> tuple:
     
     posicion = (pos_fila, pos_columna)
     return posicion
-
-""" 
-def ubicar_barcos_aleatoriamente(flota:list, matriz:list, filas:int, columnas:int):
-    cont_lleno = 0
-    cont_libre = 0
-    for i in range (len(flota)): # tipos de barcos
-        for j in range (len(flota[i])): # barcos por tipo
-            barco = flota[i][j]
-            largo_barco = flota[i][j]['tamaño']
-
-            match largo_barco:
-                case 1:
-                    casillero_libre = False
-                    while casillero_libre == False:
-                        posicion = generar_pos_aleatoria(filas, columnas) # Genera posicion aleatoria
-                        pos_fila = posicion[0]
-                        pos_columna = posicion[1]
-
-                        if matriz[pos_fila][pos_columna] == 0: # verifica si esta libre el casillero
-                            cont_libre += 1 
-                            casillero_libre = True
-                            matriz[pos_fila][pos_columna] = 1 # ubico el barco
-                        else:
-                            cont_lleno += 1
-                    
-                case 2:
-                    casillero_libre = False
-                    while casillero_libre == False:
-                    
-                        posicion = generar_pos_aleatoria(filas, columnas)
-                        pos_fila = posicion[0]
-                        pos_columna = posicion[1]
-                        while pos_columna == 9: # Si es la ultima columna no entra un barco de este tamaño
-                            posicion = generar_pos_aleatoria(filas, columnas) # entonces genera nuevamente la posicion aleatoria
-                            pos_fila = posicion[0]
-                            pos_columna = posicion[1]
-
-                        if matriz[pos_fila][pos_columna] == 0 and matriz[pos_fila][pos_columna+1] == 0:
-                            cont_libre += 1 
-                            casillero_libre = True 
-                            matriz[pos_fila][pos_columna] = 2 
-                            matriz[pos_fila][pos_columna+1] = 2 
-                        else:
-                            cont_lleno += 1
-             
-                case 3:
-                    casillero_libre = False
-                    while casillero_libre == False:
-                    
-                        posicion = generar_pos_aleatoria(filas, columnas)
-                        pos_fila = posicion[0]
-                        pos_columna = posicion[1]
-                        while pos_columna == 8 or pos_columna == 9: # Si es la ultima o anteultima columna no entra un barco de este tamaño
-                            posicion = generar_pos_aleatoria(filas, columnas)
-                            pos_fila = posicion[0]
-                            pos_columna = posicion[1]
-                        
-                        if matriz[pos_fila][pos_columna] == 0 and matriz[pos_fila][pos_columna+1] == 0 and matriz[pos_fila][pos_columna+2] == 0:
-                            cont_libre += 1 
-                            casillero_libre = True
-                            matriz[pos_fila][pos_columna] = 3 
-                            matriz[pos_fila][pos_columna+1] = 3 
-                            matriz[pos_fila][pos_columna+2] = 3
-                        else:
-                            cont_lleno += 1
-                case 4:
-                    casillero_libre = False
-                    while casillero_libre == False:
-                    
-                        posicion = generar_pos_aleatoria(filas, columnas)
-                        pos_fila = posicion[0]
-                        pos_columna = posicion[1]
-                        while pos_columna == 7 or pos_columna == 8 or pos_columna == 9: # Si es la ultima, anteultima o penultima columna no entra un barco de este tamaño
-                            posicion = generar_pos_aleatoria(filas, columnas)
-                            pos_fila = posicion[0]
-                            pos_columna = posicion[1]
-                        
-                        if matriz[pos_fila][pos_columna] == 0 and matriz[pos_fila][pos_columna+1] == 0 and matriz[pos_fila][pos_columna+2] == 0 and matriz[pos_fila][pos_columna+3] == 0:
-                            cont_libre += 1 
-                            casillero_libre = True
-                            matriz[pos_fila][pos_columna] = 4 
-                            matriz[pos_fila][pos_columna+1] = 4 
-                            matriz[pos_fila][pos_columna+2] = 4
-                            matriz[pos_fila][pos_columna+3] = 4
-                            
-                        else:
-                            cont_lleno += 1
-    return matriz """
 
 
 def ubicar_barcos_aleatoriamente(flota: list, matriz: list, filas: int, columnas: int):
@@ -232,7 +175,8 @@ def ubicar_barcos_aleatoriamente(flota: list, matriz: list, filas: int, columnas
                             lista_posiciones_barcos.append({
                                 'id_barco': id_barco,
                                 'coordenadas': (pos_fila, pos_columna),
-                                'partes_del_barco': (1, 1) # que parte es del total de partes
+                                'partes_del_barco': (1, 1), # que parte es del total de partes
+                                'parte_averiada': False
                             })
                     case 2:
                         # Verifica si en la pos_columna generada se puede colocar el barco, evaluando si los casilleros de la matriz estan vacios
@@ -243,7 +187,8 @@ def ubicar_barcos_aleatoriamente(flota: list, matriz: list, filas: int, columnas
                                 lista_posiciones_barcos.append({
                                     'id_barco': id_barco,
                                     'coordenadas': (pos_fila, pos_columna + parte),
-                                    'partes_del_barco': (parte + 1, largo_barco) # que parte es del total de partes
+                                    'partes_del_barco': (parte + 1, largo_barco), # que parte es del total de partes
+                                    'parte_averiada': False
                                 })
                     case 3:
                         if pos_columna < columnas - 2 and matriz[pos_fila][pos_columna] == 0 and matriz[pos_fila][pos_columna+1] == 0 and matriz[pos_fila][pos_columna+2] == 0:
@@ -253,7 +198,8 @@ def ubicar_barcos_aleatoriamente(flota: list, matriz: list, filas: int, columnas
                                 lista_posiciones_barcos.append({
                                     'id_barco': id_barco,
                                     'coordenadas': (pos_fila, pos_columna + parte),
-                                    'partes_del_barco': (parte + 1, largo_barco)
+                                    'partes_del_barco': (parte + 1, largo_barco),
+                                    'parte_averiada': False
                                 })
                     case 4:
                         if pos_columna < columnas - 3 and matriz[pos_fila][pos_columna] == 0 and matriz[pos_fila][pos_columna+1] == 0 and matriz[pos_fila][pos_columna+2] == 0 and matriz[pos_fila][pos_columna+3] == 0:
@@ -263,7 +209,8 @@ def ubicar_barcos_aleatoriamente(flota: list, matriz: list, filas: int, columnas
                                 lista_posiciones_barcos.append({
                                     'id_barco': id_barco,
                                     'coordenadas': (pos_fila, pos_columna + parte),
-                                    'partes_del_barco': (parte + 1, largo_barco)
+                                    'partes_del_barco': (parte + 1, largo_barco),
+                                    'parte_averiada': False
                                 })
             id_barco += 1  # Incremento el ID para el siguiente barco
     retorno.append(matriz)
@@ -306,7 +253,7 @@ def dibuja_tablero(tamaño_tablero, ancho_casillero, ventana, posicion_x, posici
 
             # Crea un diccionario para cada casillero con sus datos y asigna su valor de la matriz creada
             barco_valor = matriz_barcos[fila][columna]
-            # Con los rects del tablero construyo un dict de cada barco con sus datos en el tablero    
+            # Con los rects del tablero construyo un dict de cada casillero con sus datos en el tablero (puede tener o no parte de un barco)   
             casillero_rect = {'x':rect_tablero.x, 'y':rect_tablero.y, 'valor':barco_valor, 'id':id_casillero, 'fila':fila, 'columna':columna}
             lista_casilleros_rect.append(casillero_rect)
         
@@ -315,7 +262,7 @@ def dibuja_tablero(tamaño_tablero, ancho_casillero, ventana, posicion_x, posici
     
             id_casillero += 1
 
-    retorno = [lista_casilleros_rect, barcos_averiados] 
+    retorno = [lista_casilleros_rect, barcos_averiados, rectangulos] 
     return retorno
 
 def dibuja_rects(tamaño_tablero, ancho_casillero, ventana, posicion_x, posicion_y): # Dibujo el tablero con sus rectangulos sin valores, para poder machear el click del usuario en estos
@@ -343,8 +290,7 @@ def puntaje(usuario)-> list[dict]:
     
     return puntajes
 
-
-def actualizar_puntaje(usuario, puntajes, nuevo_puntaje) -> list[dict]:
+def actualizar_puntaje(usuario, puntajes, nuevo_puntaje) -> int:
     # Buscamos al usuario en la lista de puntajes
     for puntaje in puntajes:
         if puntaje['usuario'] == usuario:
@@ -355,7 +301,7 @@ def actualizar_puntaje(usuario, puntajes, nuevo_puntaje) -> list[dict]:
 
 def actualiza_marcador(puntajes, ventana, puntaje_actual, x_puntajes, y_puntajes):
     actualizado = puntajes[0]['puntaje_actual']
-    actualizado_str = str(puntajes[0]['puntaje_actual']) 
+    actualizado_str = str(actualizado) 
     
     pygame.draw.rect(ventana, color_boton_puntaje, puntaje_actual)
     txt_puntaje_actualizado = fuente_puntaje_actual.render(actualizado_str, False, color_letra_puntaje)
@@ -371,37 +317,19 @@ def modifica_matriz_disparos(matriz, barco)-> list:
 
 
 # Interaccion con el tablero
-def click_tablero(coordenadas_click, tamaño_tablero, ancho_casillero, ANCHO_PANTALLA, ALTO_PANTALLA, barcos_casilleros, matriz, puntajes, usuario, barcos_averiados, ventana, puntaje_actual,  x_puntajes, y_puntajes, color_barco_tocado, color_agua, partes_barco_coordenadas):
-    
-    # !!!
-    # VER DE TRAER LA LISTA DE RECTS sola y no generar una cada vez que hace click en el tablero
-    lista_rects_valores = dibuja_rects(tamaño_tablero, ancho_casillero, ventana, posicion_x=ANCHO_PANTALLA/5, posicion_y=ALTO_PANTALLA/7)
-    # !!!
-    #     
+def click_tablero(coordenadas_click, tamaño_tablero, ancho_casillero, ANCHO_PANTALLA, ALTO_PANTALLA, barcos_casilleros, matriz, puntajes, usuario, barcos_averiados, ventana, puntaje_actual,  x_puntajes, y_puntajes, color_barco_tocado, color_agua, partes_barco_coordenadas, rectangulos):
 
-    for i in range(len(lista_rects_valores)): # cambiar al for
-        rect_seleccionado = lista_rects_valores[i]
+    for i in range(len(rectangulos)): # cambiar al for
+        rect_seleccionado = rectangulos[i]
         if rect_seleccionado.collidepoint(coordenadas_click):
         # veo si hay un barco en ese casillero y su valor
-            casillero_tocado = barcos_casilleros[i] # Una parte del barco (un casillero)
+            casillero_tocado = barcos_casilleros[i]
             barco_valor = barcos_casilleros[i]['valor']
+            posicion_fila_columna = ()
+            posicion_fila_columna = casillero_tocado['fila'], casillero_tocado['columna']
             print(f'casillero_tocado >> {casillero_tocado}')
             
-            """ if barco_id != 0:
-                barcos_averiados[barco_id] += 1 # suma una parte averiada al barco """
-
-            # Verificamos si el barco está hundido
-            """ resultado = obtener_partes_barco(barco_id, barcos_casilleros, barcos_averiados)
-            barco_hundido = resultado[0]
-            cant_partes_hundidas = resultado[1]
-            if barco_hundido: # si esta hundido
-                puntaje_hundido = 0
-                print(f"El barco {barco_id} está hundido!")
-                puntaje_hundido += cant_partes_hundidas * 10  # Suma 10 puntos por cada parte tocada
-                actualizar_puntaje(usuario, puntajes, puntaje_hundido)
-                print(f"Puntaje aumentado a {puntaje}")
-            else:
-                print(f"El barco {barco_id} No esta hundido") """
+            
             
             if barco_valor != 0:  # Si hay un barco
                 if barco_valor == 9: # Si ya estaba tocado/averiado
@@ -419,7 +347,26 @@ def click_tablero(coordenadas_click, tamaño_tablero, ancho_casillero, ANCHO_PAN
                     # MODIFICA EL PUNTAJE DEL USUARIO
                     nuevo_puntaje = 5
                     actualizar_puntaje(usuario, puntajes, nuevo_puntaje)
-                    
+                    print(f' \n--- Puntaje_actual > {puntajes[0]['puntaje_actual']}')
+
+                    # Busca el id_barco tocado para validar si esta hundido o no
+                    for j in range (len(partes_barco_coordenadas)):
+                        #print(j)
+                        if posicion_fila_columna == partes_barco_coordenadas[j]['coordenadas']:
+                            print(j)
+                            partes_barco_coordenadas[j]['parte_averiada'] = True # Marco la parte averiada
+                            id_barco_tocado = partes_barco_coordenadas[j]['id_barco']
+                            print(f'>>> id_barco_tocado : {id_barco_tocado}')
+                            print(f' \n--- Puntaje_actual > {puntajes[0]['puntaje_actual']}')
+                            # Valida si esta hundido
+                            hundido = validar_barco_hundido(id_barco_tocado, partes_barco_coordenadas)
+                            print(f'>>> Barco hundido : {hundido}')
+
+                            # Actualiza el puntaje
+                            if hundido:
+                                puntaje_hundido = 10 * partes_barco_coordenadas[j]['partes_del_barco'][1]
+                                actualizar_puntaje(usuario, puntajes, puntaje_hundido)
+                                print(f' \n--- Puntaje_actual > {puntajes[0]['puntaje_actual']}')
             else:
                 pygame.draw.rect(ventana, color_agua, rect_seleccionado)  # Redibujar el rectángulo con el nuevo color
                 print(f' Agua en las coordenadas: {rect_seleccionado.x, rect_seleccionado.y}')
@@ -428,7 +375,6 @@ def click_tablero(coordenadas_click, tamaño_tablero, ancho_casillero, ANCHO_PAN
                 actualizar_puntaje(usuario, puntajes, nuevo_puntaje)
 
             # Actualiza el marcador de los puntajes
-
             #actualiza_marcador(puntajes)
             actualiza_marcador(puntajes, ventana, puntaje_actual, x_puntajes, y_puntajes)
             pygame.display.update(rect_seleccionado)  # Solo actualiza el área del clic
@@ -439,8 +385,35 @@ def click_tablero(coordenadas_click, tamaño_tablero, ancho_casillero, ANCHO_PAN
 
 
 # VERIFICAR SI EL BARCO ESTA HUNDIDO PARA EL PUNTAJE
+""" 
+def validar_barco_hundido(id_barco, partes_barco_coordenadas) -> bool:
+    
+    for parte in partes_barco_coordenadas:
+        id_barco = parte['id_barco']
+        if id_barco not in barcos:
+            barcos[id_barco] = []
+        barcos[id_barco].append(parte['parte_averiada'])
+        
+    for id_barco, partes in barcos.items():
+        hundido = True
+        for parte in partes:
+            if not parte: #not parte = True: True == True? >>> True 
+                hundido = False
+                break
+
+    return hundido
+ """
+def validar_barco_hundido(id_barco, partes_barco_coordenadas) -> bool:
+    # Evaluar si todas las partes del barco con el id proporcionado están averiadas
+    for parte in partes_barco_coordenadas:
+        if parte['id_barco'] == id_barco and parte['parte_averiada'] == False: # not (False) = True
+            return False  # Si alguna parte no está averiada, no está hundido
+    return True  # Todas las partes están averiadas
+
+
 def obtener_partes_barco(id_barco, barcos_averiados, barcos_casilleros):
 
+    # partes averiadas deberia estar en otro lado inicializada desde cero
     partes_averiadas = [] # [{}, {}, {}] va a tener partes(barco{}-casilleros) averiadas
     for barco in barcos_casilleros:
         if barco['id'] == id_barco:
@@ -449,14 +422,14 @@ def obtener_partes_barco(id_barco, barcos_averiados, barcos_casilleros):
     # Cuantas partes del barco han sido tocadas
     partes_tocadas = 0 
     if id_barco in barcos_averiados:
-        if barcos_averiados[id_barco] != 0:
+        if barcos_averiados[id_barco] != 0: # esta validacion ya la estoy haciendo en 
             partes_tocadas = barcos_averiados[id_barco]
         else:
             partes_tocadas = 0
 
-    # Si el numero de partes tocadas es igual al numero total de partes del barco
+    # Si el numero de partes tocadas es igual al numero total de partes del barco => hundido 
     hundido = False
-    if partes_tocadas == len(partes_averiadas):
+    if partes_tocadas == len(partes_averiadas): # pero aca habria que agregar que sea para determiando barco
         hundido = True  # hundido
     else:
         hundido = False  # no está hundido    

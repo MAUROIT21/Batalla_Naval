@@ -33,3 +33,23 @@ CORRECIONES:
 - Minusculas para todas las variables
 """
 
+""" 
+LOGICA DEL BARCO HUNDIDO
+. Cuanto toco un casillero con una parte del barco, esa parte debe cambiar su estado. 
+    Al mismo tiempo, deberia validar si el barco esta hundido o no al tocar esa parte.
+    Si esta hundido realiza el calculo del puntaje y sino no lo hace. 
+
+1) > barcos_casilleros = creada en dibuja tablero : lista de dict de cada casillero con sus coordenadas, valor
+    casillero_rect = {'x':rect_tablero.x, 'y':rect_tablero.y, 'valor':barco_valor, 'id':id_casillero, 'fila': fila, 'columna': columna}
+
+2) > barcos_averiados = se crea en dibuja_tablero > inicializa cada casillero en 0, quizas no la uso!?!?
+
+3) > [lista_posiciones_barcos] = [partes_barco_coordenadas] = creada en ubicar_barcos_aleatoriamente: 
+
+{   'id_barco': id_barco, 
+    'coordenadas': (pos_fila, pos_columna),
+    'partes_del_barco': (parte, largo_barco),
+    'parte_averiada': False/True
+} 
+
+ """

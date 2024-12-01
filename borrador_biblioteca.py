@@ -296,12 +296,89 @@ def saliendo(nick:str)-> str:
  """
 
 
-""" barco_rect = {}
-barco_rect['x':rect_tablero.x]
-barco_rect['y':rect_tablero.y]
-barco_rect['valor':barco_valor]
-barco_rect['id':id_barco]
-barco_rect['fila':fila]
-barco_rect['columna':columna] 
-"""
-                
+# Interaccion con el tablero
+def click_tablero(coordenadas_click, tamaño_tablero, ancho_casillero, ANCHO_PANTALLA, ALTO_PANTALLA, barcos_casilleros, matriz, puntajes, usuario, barcos_averiados, ventana, puntaje_actual,  x_puntajes, y_puntajes, color_barco_tocado, color_agua, partes_barco_coordenadas):
+    
+    # !!!
+    # VER DE TRAER LA LISTA DE RECTS sola y no generar una cada vez que hace click en el tablero
+    lista_rects_valores = dibuja_rects(tamaño_tablero, ancho_casillero, ventana, posicion_x=ANCHO_PANTALLA/5, posicion_y=ALTO_PANTALLA/7)
+    # !!!
+    #     
+
+    for i in range(len(lista_rects_valores)): # cambiar al for
+        rect_seleccionado = lista_rects_valores[i]
+        if rect_seleccionado.collidepoint(coordenadas_click):
+        # veo si hay un barco en ese casillero y su valor
+            casillero_tocado = barcos_casilleros[i] # Una parte del barco (un casillero)
+            barco_valor = barcos_casilleros[i]['valor']
+            print(f'casillero_tocado >> {casillero_tocado}')
+            
+            """ if barco_id != 0:
+                barcos_averiados[barco_id] += 1 # suma una parte averiada al barco """
+
+            # Verificamos si el barco está hundido
+            """ resultado = obtener_partes_barco(barco_id, barcos_casilleros, barcos_averiados)
+            barco_hundido = resultado[0]
+            cant_partes_hundidas = resultado[1]
+            if barco_hundido: # si esta hundido
+                puntaje_hundido = 0
+                print(f"El barco {barco_id} está hundido!")
+                puntaje_hundido += cant_partes_hundidas * 10  # Suma 10 puntos por cada parte tocada
+                actualizar_puntaje(usuario, puntajes, puntaje_hundido)
+                print(f"Puntaje aumentado a {puntaje}")
+            else:
+                print(f"El barco {barco_id} No esta hundido") """
+            
+            if barco_valor != 0:  # Si hay un barco
+                if barco_valor == 9: # Si ya estaba tocado/averiado
+                    print(f' Barco averiado! en las coordenadas: {rect_seleccionado.x, rect_seleccionado.y}')
+                else:
+                    print(f' Tocaste un barco en las coordenadas: {rect_seleccionado.x, rect_seleccionado.y} ')
+                    print(f' El barco es: {casillero_tocado} ')
+                    barcos_casilleros[i]['valor'] = 9 # uso 9 para barcos tocados/heridos
+                    # Modifica la matriz de barcos
+                    matriz_modificada = modifica_matriz_disparos(matriz, casillero_tocado)
+                    
+                    # MODIFICAR EL COLOR AL RECT que contiene el texto
+                    pygame.draw.rect(ventana, color_barco_tocado, rect_seleccionado)  
+
+                    # MODIFICA EL PUNTAJE DEL USUARIO
+                    nuevo_puntaje = 5
+                    actualizar_puntaje(usuario, puntajes, nuevo_puntaje)
+                    
+            else:
+                pygame.draw.rect(ventana, color_agua, rect_seleccionado)  # Redibujar el rectángulo con el nuevo color
+                print(f' Agua en las coordenadas: {rect_seleccionado.x, rect_seleccionado.y}')
+                # MODIFICA EL PUNTAJE DEL USUARIO - 1
+                nuevo_puntaje = -1
+                actualizar_puntaje(usuario, puntajes, nuevo_puntaje)
+
+            # Actualiza el marcador de los puntajes
+            #actualiza_marcador(puntajes)
+            actualiza_marcador(puntajes, ventana, puntaje_actual, x_puntajes, y_puntajes)
+            pygame.display.update(rect_seleccionado)  # Solo actualiza el área del clic
+
+            break  # Salir si ya toco un casillero 
+
+    return puntajes
+
+def dibuja_rects(tamaño_tablero, ancho_casillero, ventana, posicion_x, posicion_y): # Dibujo el tablero con sus rectangulos sin valores, para poder machear el click del usuario en estos
+
+    #lista_rects = [] # lista de rectangulos
+    rectangulos = []
+    for fila in range(tamaño_tablero):
+        for columna in range(tamaño_tablero):
+            
+            x_rect = posicion_x + columna * ancho_casillero
+            y_rect = posicion_y + fila * ancho_casillero
+            rect_tablero = pygame.Rect(x_rect, y_rect, ancho_casillero, ancho_casillero)
+            rectangulo_tablero = pygame.draw.rect(ventana, fondo_color_tablero, rect_tablero, 1)  # Dibuja las líneas del tablero
+            rectangulos.append(rectangulo_tablero)
+            
+            #lista_rects.append(rect_tablero) # lista de rectangulos
+    return rectangulos
+
+
+""" 
+Si estás trabajando con música de fondo, usa mixer.music, ya que está optimizado para manejar archivos de mayor tamaño. Por otro lado, mixer.Sound es mejor para efectos cortos y repetitivos.
+ """
