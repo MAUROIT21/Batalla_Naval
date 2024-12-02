@@ -28,6 +28,7 @@ color_boton_puntaje = (15,15,15)
 color_usuario_boton = (106, 46, 191)
 color_usuario_boton_activo = (209, 20, 6)
 color_usuario_boton_inactivo = (20, 209, 6)
+color_boton_guardar = (0,255,50)
 
 
 #Fuentes

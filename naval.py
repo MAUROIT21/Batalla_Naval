@@ -6,6 +6,17 @@ from colores_naval import *
 pygame.init()
 sonido_juego()
 
+puntajes_juego_dict = {}
+ruta = 'teoria_juegos/Batalla_Naval/puntajes.json'
+
+def cargar_puntajes_json(ruta):
+    with open(ruta, "r") as archivo:
+        cargado = json.load(archivo)
+        return cargado
+
+puntajes_juego_dict = cargar_puntajes_json(ruta)
+#print(puntajes_juego_dict)
+
 # Configuracion de la pantalla/ventana
 ANCHO_PANTALLA = 800
 ALTO_PANTALLA = 600
@@ -55,20 +66,30 @@ x_boton_derecha = ANCHO_PANTALLA - 150  # Margen derecho
 y_boton_derecha = 100
 x_puntajes = 325
 y_puntajes = 15
+x_caja_texto = 575
+y_caja_texto = 15   
+x_guardar = 300
+y_guardar = 550
 salir_jugando = pygame.Rect(x_boton_derecha, y_boton_derecha, ancho_boton, alto_boton)
 puntaje_actual = pygame.Rect(x_puntajes, y_puntajes, ancho_boton, alto_boton)
 reiniciar_jugando = pygame.Rect(x_boton_derecha, y_boton_derecha + 100, ancho_boton, alto_boton)
 volver_menu = pygame.Rect(x_boton_derecha, y_boton_derecha + 200, ancho_boton, alto_boton)
-usuario_caja_texto = pygame.Rect(x_puntajes + 250, y_puntajes, ancho_boton + 90, alto_boton)
+usuario_caja_texto = pygame.Rect(x_caja_texto, y_caja_texto, ancho_boton + 90, alto_boton)
+
+guardar_puntaje = pygame.Rect(x_guardar, y_guardar, ancho_boton + 30, alto_boton-10)
+
 
 # Dibujar el tablero
 ancho_casillero = 45
 tamaño_tablero = 10
 
+
 # EJECUCION DEL JUEGO
 estado_pantalla = 'inicio'
         
 corriendo = True
+ingreso_texto = ''
+
 while corriendo:
     # bucle del juego
     
@@ -77,39 +98,69 @@ while corriendo:
         if evento.type == pygame.QUIT:
             estado_pantalla = 'saliendo' # > saliendo
             corriendo = False
+        
+        # Capturar eventos de teclado
+        if evento.type == pygame.TEXTINPUT:
+            if usuario_caja_texto.collidepoint(pygame.mouse.get_pos()):  # Solo cuando el mouse está sobre la caja
+                largo_texto = len(ingreso_texto)
+
+                if largo_texto < 20:  
+                    ingreso_texto += evento.text
+                else:
+                    print('Texto supera el limite...')
+
+        elif evento.type == pygame.KEYDOWN:
+            if usuario_caja_texto.collidepoint(pygame.mouse.get_pos()):  # Solo cuando el mouse está sobre la caja
+                if evento.key == pygame.K_BACKSPACE:
+                    ingreso_texto = ingreso_texto[:-1]  # Borrar último carácter
+                elif evento.key == pygame.K_RETURN:
+                    usuario = ingreso_texto
+                    # guardar aqui el usuario y crear el nuevo dict{usuario} en puntajes_juego_dict{}
+                    inicializa_usuario_nuevo(usuario, puntajes_juego_dict)
+                    print(puntajes_juego_dict)
+                    print("Usuario ingresado:", usuario)
+        txt_usuario_boton = ingresar_usuario_texto(ventana, usuario_caja_texto, ingreso_texto)
+        pygame.display.update(usuario_caja_texto)
+        
 
         # Eventos al hacer click
         if evento.type == pygame.MOUSEBUTTONDOWN:
             coordenadas_click = pygame.mouse.get_pos()
 
             if jugar.collidepoint(coordenadas_click):
-                estado_pantalla = 'inicia_juego' # > inicia_juego
+                usuario = ingreso_texto
+                #puntajes_juego = puntaje(usuario)
+                inicializa_marcador(usuario, puntajes_juego_dict, x_puntajes, y_puntajes, ventana, puntaje_actual)
+
+                estado_pantalla = 'inicia_juego'
                 
             if salir.collidepoint(coordenadas_click) or salir_jugando.collidepoint(coordenadas_click):
-                estado_pantalla = 'saliendo' # > saliendo
+                estado_pantalla = 'saliendo'
                 corriendo = False
             
             if puntajes_historicos.collidepoint(coordenadas_click):
                 pass
 
             if estado_pantalla == 'cargado':
-                click_tablero(coordenadas_click, tamaño_tablero, ancho_casillero, ANCHO_PANTALLA, ALTO_PANTALLA, barcos_casilleros, matriz_datos, puntajes, usuario, barcos_averiados, ventana, puntaje_actual, x_puntajes, y_puntajes, color_barco_tocado, color_agua, partes_barco_coordenadas, rectangulos)
+                usuario = ingreso_texto
+                puntajes_juego_partida = click_tablero(coordenadas_click, tamaño_tablero, ancho_casillero, ANCHO_PANTALLA, ALTO_PANTALLA, barcos_casilleros, matriz_datos, puntajes_juego_dict, usuario, barcos_averiados, ventana, puntaje_actual, x_puntajes, y_puntajes, color_barco_tocado, color_agua, partes_barco_coordenadas, rectangulos)
                 
             if volver_menu.collidepoint(coordenadas_click):
                 estado_pantalla = 'inicio'
-                # Reiniciar puntaje_marcador, volver al menu
-                # Deberia cargar el juego de nuevo, su fondo de pantalla, los botones del menu y la musica.
-
-            #solo reinicia el tablero, no cambia de pantalla.
+                
             if reiniciar_jugando.collidepoint(coordenadas_click):
-                puntajes = puntaje(usuario)
                 estado_pantalla = 'inicia_juego'
             
-            if usuario_caja_texto.collidepoint(coordenadas_click):
-                interactua_boton_usuario(ventana, x_puntajes, y_puntajes, usuario_caja_texto)
+            if guardar_puntaje.collidepoint(coordenadas_click):
+                #usuario = ingreso_texto
+                print(usuario)
+                #puntajes = puntaje(usuario)
+                actualizar_puntaje_cierre(usuario, puntajes_juego_partida)
+                inicializa_marcador(usuario, puntajes_juego_partida, x_puntajes, y_puntajes, ventana, puntaje_actual)
+                guardar_puntaje_json(puntajes_juego_partida)
+            
+            
 
-        
-    
     #Eventos de colores
     # De los botones
     mouse_x, mouse_y = pygame.mouse.get_pos()
@@ -129,33 +180,23 @@ while corriendo:
         color_boton_salir = color_boton_salir_activo
     else:
         color_boton_salir = color_boton_salir_inactivo
-    """ if usuario_caja_texto.collidepoint(mouse_x, mouse_y):
-        color_usuario_boton = color_usuario_boton_activo
-    else:
-        color_usuario_boton = color_usuario_boton_inactivo """
-
+    
     # Estados del juego
     match estado_pantalla:
         case 'inicio':
-            # Limpiar pantalla, tablero, puntajes            
-            # BOTONES DE JUEGO INACTIVOS
-            usuario = menu_juego(ventana, imagen_barcos, nivel, jugar, puntajes_historicos, salir, color_boton_nivel, color_boton_jugar, color_boton_puntaje, color_boton_salir, y_boton, x_boton, salir_jugando, puntaje_actual, reiniciar_jugando, volver_menu, usuario_caja_texto, ANCHO_PANTALLA)
-            puntajes = puntaje(usuario)
+            menu_juego(ventana, imagen_barcos, nivel, jugar, puntajes_historicos, salir, color_boton_nivel, color_boton_jugar, color_boton_puntaje, color_boton_salir, y_boton, x_boton, salir_jugando, puntaje_actual, reiniciar_jugando, volver_menu, usuario_caja_texto, ANCHO_PANTALLA, txt_usuario_boton, guardar_puntaje)
         case 'inicia_juego':
-            # poner activos los botones y marcador
-
-            datos_retorno_jugando = jugando(tamaño_tablero, ancho_casillero, ventana, imagen_fondo_oceano, nivel, jugar, puntajes_historicos, salir, ANCHO_PANTALLA, ALTO_PANTALLA, color_boton_salir, color_boton_puntaje, salir_jugando, puntaje_actual, reiniciar_jugando, volver_menu, x_puntajes, x_boton_derecha, y_puntajes, y_boton_derecha, usuario_caja_texto, color_usuario_boton)
+            datos_retorno_jugando = jugando(tamaño_tablero, ancho_casillero, ventana, imagen_fondo_oceano, nivel, jugar, puntajes_historicos, salir, ANCHO_PANTALLA, ALTO_PANTALLA, color_boton_salir, color_boton_puntaje, salir_jugando, puntaje_actual, reiniciar_jugando, volver_menu, x_puntajes, x_boton_derecha, y_puntajes, y_boton_derecha, usuario_caja_texto, color_usuario_boton, txt_usuario_boton, color_boton_guardar, guardar_puntaje, x_guardar, y_guardar)
             matriz_datos = datos_retorno_jugando[0]
             barcos_casilleros = datos_retorno_jugando[1]
             barcos_averiados = datos_retorno_jugando[2]
             partes_barco_coordenadas = datos_retorno_jugando[3]
             rectangulos = datos_retorno_jugando[4]
+            inicializa_marcador(usuario, puntajes_juego_dict, x_puntajes, y_puntajes, ventana, puntaje_actual)
             estado_pantalla = 'cargado'
-            
+        
         case 'cargado':
             pass
-            #estado_pantalla = 'pausa'
-        
         case 'pausa':
             pass
 
@@ -164,7 +205,7 @@ while corriendo:
         
         case 'saliendo':
             """ Pedir el nombre de usuario del jugador antes de salir """
-            saliendo(nick='Mauro')
+            saliendo('mauro')
 
 # Refresh de la pantalla de juego
     pygame.display.update()
