@@ -145,19 +145,21 @@ while corriendo:
                 usuario = ingreso_texto
                 puntajes_juego_partida = click_tablero(coordenadas_click, tamaño_tablero, ancho_casillero, ANCHO_PANTALLA, ALTO_PANTALLA, barcos_casilleros, matriz_datos, puntajes_juego_dict, usuario, barcos_averiados, ventana, puntaje_actual, x_puntajes, y_puntajes, color_barco_tocado, color_agua, partes_barco_coordenadas, rectangulos)
                 
+                if guardar_puntaje.collidepoint(coordenadas_click):
+                    usuario = ingreso_texto
+                    print(usuario)
+                    
+                    #actualizar_puntaje(usuario, puntajes_juego_partida)
+                    actualizar_puntaje_cierre(usuario, puntajes_juego_partida)
+                    inicializa_marcador(usuario, puntajes_juego_partida, x_puntajes, y_puntajes, ventana, puntaje_actual)
+                    guardar_puntaje_json(puntajes_juego_partida)
+                    estado_pantalla = 'inicio'
+                
             if volver_menu.collidepoint(coordenadas_click):
                 estado_pantalla = 'inicio'
                 
             if reiniciar_jugando.collidepoint(coordenadas_click):
                 estado_pantalla = 'inicia_juego'
-            
-            if guardar_puntaje.collidepoint(coordenadas_click):
-                #usuario = ingreso_texto
-                print(usuario)
-                #puntajes = puntaje(usuario)
-                actualizar_puntaje_cierre(usuario, puntajes_juego_partida)
-                inicializa_marcador(usuario, puntajes_juego_partida, x_puntajes, y_puntajes, ventana, puntaje_actual)
-                guardar_puntaje_json(puntajes_juego_partida)
             
             
 

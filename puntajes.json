@@ -1,3 +1,37 @@
 {
-    
+    "": {
+        "ultimo_puntaje": -2,
+        "mejor_puntaje_historico": 0,
+        "puntaje_actual": -1
+    },
+    "AA": {
+        "ultimo_puntaje": 17,
+        "mejor_puntaje_historico": 17,
+        "puntaje_actual": 0
+    },
+    "BBB": {
+        "ultimo_puntaje": 89,
+        "mejor_puntaje_historico": 89,
+        "puntaje_actual": 0
+    },
+    "Ce": {
+        "ultimo_puntaje": 68,
+        "mejor_puntaje_historico": 68,
+        "puntaje_actual": 0
+    },
+    "juance": {
+        "ultimo_puntaje": 2,
+        "mejor_puntaje_historico": 69,
+        "puntaje_actual": -1
+    },
+    "juan222": {
+        "ultimo_puntaje": 30,
+        "mejor_puntaje_historico": 47,
+        "puntaje_actual": 0
+    },
+    "pepi": {
+        "ultimo_puntaje": 23,
+        "mejor_puntaje_historico": 23,
+        "puntaje_actual": 0
+    }
 }

@@ -332,7 +332,7 @@ def actualizar_puntaje(usuario, puntajes, nuevo_puntaje):
         puntajes[usuario] = {
         "ultimo_puntaje": 0,
         "mejor_puntaje_historico": 0,
-        "puntaje_actual": nuevo_puntaje
+        "puntaje_actual": 0
     }
     return puntajes
 
@@ -350,17 +350,25 @@ def inicializa_marcador(usuario, puntajes, x_puntajes, y_puntajes, ventana, punt
     marcador_inicializado = '000'
     pygame.draw.rect(ventana, color_boton_puntaje, puntaje_actual)
     txt_puntaje_actualizado = fuente_puntaje_actual.render(marcador_inicializado, False, color_letra_puntaje)
-    ventana.blit(txt_puntaje_actualizado, (x_puntajes + 50, y_puntajes + 10))
+    ventana.blit(txt_puntaje_actualizado, (x_puntajes + 35, y_puntajes + 10))
     return marcador_inicializado
 
 def actualizar_puntaje_cierre(usuario, puntajes_juego_partida):
-    # poner ultimo puntaje como el puntaje actual 
-    puntajes_juego_partida[usuario]['ultimo_puntaje'] = puntajes_juego_partida[usuario]['puntaje_actual']
-    # poner puntaje actual en cero
-    puntajes_juego_partida[usuario]['puntaje_actual'] = 0
-    # y si el ultimo es mayor que el historico reemplazarlo
-    if puntajes_juego_partida[usuario]['ultimo_puntaje'] > puntajes_juego_partida[usuario]['mejor_puntaje_historico']:
-        puntajes_juego_partida[usuario]['mejor_puntaje_historico'] = puntajes_juego_partida[usuario]['ultimo_puntaje']
+    if usuario not in puntajes_juego_partida:
+        puntajes_juego_partida[usuario] = {
+        "ultimo_puntaje": 0,
+        "mejor_puntaje_historico": 0,
+        "puntaje_actual": 0
+            }
+    #if puntajes_juego_partida[usuario]['ultimo_puntaje'] == 0: # Se acaba de guardar sin tocar casillero o bien la ultima partida quedo en 0
+        #pass
+    else:
+        puntajes_juego_partida[usuario]['ultimo_puntaje'] = puntajes_juego_partida[usuario]['puntaje_actual']
+        # poner puntaje actual en cero
+        puntajes_juego_partida[usuario]['puntaje_actual'] = 0
+        # y si el ultimo es mayor que el historico reemplazarlo
+        if puntajes_juego_partida[usuario]['ultimo_puntaje'] > puntajes_juego_partida[usuario]['mejor_puntaje_historico']:
+            puntajes_juego_partida[usuario]['mejor_puntaje_historico'] = puntajes_juego_partida[usuario]['ultimo_puntaje']
 
 
 def inicializa_usuario_nuevo(usuario, puntajes_juego_dict):
