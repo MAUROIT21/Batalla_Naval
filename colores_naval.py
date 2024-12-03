@@ -15,6 +15,8 @@ color_letra_botones = (255,255,255)
 color_letra_botones_activo = (230,230,230)
 color_botones_juego = (0, 0, 255)
 color_letra_puntaje = (210,210,210)
+color_letra_titulo = (0,0,0)
+
 
 color_boton_jugar_inactivo = (0,0,255)
 color_boton_nivel_inactivo = (0,0,255)
@@ -29,9 +31,11 @@ color_usuario_boton = (106, 46, 191)
 color_usuario_boton_activo = (209, 20, 6)
 color_usuario_boton_inactivo = (20, 209, 6)
 color_boton_guardar = (0,255,50)
+color_boton_volver_atras = (0,0,180)
 
 
 #Fuentes
 fuente_botones = pygame.font.SysFont("Comic Sans" , 18, True) #tamaño de la letra
 fuente_casilleros = pygame.font.SysFont('Times New Roman', 22, True, True)
 fuente_puntaje_actual = pygame.font.SysFont('Verdana', 25, True, True)
+fuente_titulo = pygame.font.SysFont('Verdana', 50, True, True)

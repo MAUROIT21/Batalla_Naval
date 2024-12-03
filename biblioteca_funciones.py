@@ -6,18 +6,12 @@ from colores_naval import *
 
 #pygame.init()
 
-
 #Musica del juego
 def sonido_juego ():
     mixer.init()
     ruta_musica = 'teoria_juegos/Batalla_Naval/archivos_naval/naval_music.mp3'
-    #sonido = mixer.Sound(ruta_musica)
-    #sonido.set_volume(0.4)
-    #sonido.play()
-    
-     # Cargar y reproducir música en bucle
     mixer.music.load(ruta_musica)
-    mixer.music.set_volume(0.5)
+    mixer.music.set_volume(0.2)
     #mixer.music.play(loops=-1)  # -1 indica reproducción infinita
 
 # Inicializa matriz
@@ -42,10 +36,10 @@ def saliendo(usuario:str)-> str:
     return mensaje
 
 
-def menu_juego(ventana, imagen_barcos, nivel, jugar, puntajes_historicos, salir, color_boton_nivel, color_boton_jugar, color_boton_puntaje, color_boton_salir, y_boton, x_boton, salir_jugando, puntaje_actual, reiniciar_jugando, volver_menu, usuario_caja_texto, ANCHO_PANTALLA, txt_usuario_boton, guardar_puntaje):
+def menu_juego(ventana, imagen_barcos, nivel, jugar, puntajes_historicos, salir, color_boton_nivel, color_boton_jugar, color_boton_puntaje, color_boton_salir, y_boton, x_boton, salir_jugando, puntaje_actual, reiniciar_jugando, volver_menu, usuario_caja_texto, ANCHO_PANTALLA, txt_usuario_boton, guardar_puntaje, volver_atras):
     ventana.blit(imagen_barcos, (0,0)) # Imagen de Fondo
     imagen_barcos.set_alpha(255)
-    botones_jugando_inactivos(salir_jugando, puntaje_actual, reiniciar_jugando, volver_menu, usuario_caja_texto, ANCHO_PANTALLA, guardar_puntaje)
+    botones_jugando_inactivos(salir_jugando, puntaje_actual, reiniciar_jugando, volver_menu, usuario_caja_texto, ANCHO_PANTALLA, guardar_puntaje, volver_atras)
     botones_menu_activos(nivel, jugar, puntajes_historicos, salir, x_boton)
     limpia_usuario_texto(ventana, usuario_caja_texto, txt_usuario_boton)
     pygame.draw.rect(ventana, color_boton_nivel, nivel) # con el objeto nivel, dibuja el rectangulo
@@ -110,12 +104,13 @@ def limpia_usuario_texto(ventana, usuario_caja_texto, txt_usuario_boton):
     return txt_usuario_boton
 
 # Botones del menu inactivos
-def botones_menu_inactivos(nivel, jugar, puntajes_historicos, salir, ANCHO_PANTALLA):
+def botones_menu_inactivos(nivel, jugar, puntajes_historicos, salir, ANCHO_PANTALLA, volver_atras):
     # LOS SACO DE LA PANTALLA
     nivel.x = ANCHO_PANTALLA-1000
     jugar.x = ANCHO_PANTALLA-1000
     puntajes_historicos.x = ANCHO_PANTALLA-1000
     salir.x = ANCHO_PANTALLA-1000
+    volver_atras.x = ANCHO_PANTALLA-1000
 
 def botones_menu_activos (nivel, jugar, puntajes_historicos, salir, x_boton):
     # vuelven a su posicion original activos.
@@ -124,7 +119,7 @@ def botones_menu_activos (nivel, jugar, puntajes_historicos, salir, x_boton):
     puntajes_historicos.x = x_boton + 300
     salir.x = x_boton + 450
 
-def botones_jugando_inactivos(salir_jugando, puntaje_actual, reiniciar_jugando, volver_menu, usuario_caja_texto, ANCHO_PANTALLA, guardar_puntaje):
+def botones_jugando_inactivos(salir_jugando, puntaje_actual, reiniciar_jugando, volver_menu, usuario_caja_texto, ANCHO_PANTALLA, guardar_puntaje, volver_atras):
     # LOS SACO DE LA PANTALLA
     salir_jugando.x = ANCHO_PANTALLA+1000
     puntaje_actual.x = ANCHO_PANTALLA+1000
@@ -132,6 +127,7 @@ def botones_jugando_inactivos(salir_jugando, puntaje_actual, reiniciar_jugando, 
     volver_menu.x = ANCHO_PANTALLA+1000
     usuario_caja_texto.x = ANCHO_PANTALLA+1000
     guardar_puntaje.x = ANCHO_PANTALLA+1000
+    volver_atras.x = ANCHO_PANTALLA+1000
 
 def botones_jugando_activos(salir_jugando, puntaje_actual, reiniciar_jugando, volver_menu, usuario_caja_texto, ANCHO_PANTALLA, x_puntajes, x_boton_derecha, guardar_puntaje, x_guardar, y_guardar):
     # LOS SACO DE LA PANTALLA
@@ -143,10 +139,10 @@ def botones_jugando_activos(salir_jugando, puntaje_actual, reiniciar_jugando, vo
     guardar_puntaje.x = x_guardar
 
 
-def jugando (tamaño_tablero, ancho_casillero, ventana, imagen_fondo_oceano, nivel, jugar, puntajes_historicos, salir, ANCHO_PANTALLA, ALTO_PANTALLA, color_boton_salir, color_boton_puntaje, salir_jugando, puntaje_actual, reiniciar_jugando, volver_menu, x_puntajes, x_boton_derecha, y_puntajes, y_boton_derecha, usuario_caja_texto, color_usuario_boton, txt_usuario_boton, color_boton_guardar, guardar_puntaje, x_guardar, y_guardar):
+def jugando (tamaño_tablero, ancho_casillero, ventana, imagen_fondo_oceano, nivel, jugar, puntajes_historicos, salir, ANCHO_PANTALLA, ALTO_PANTALLA, color_boton_salir, color_boton_puntaje, salir_jugando, puntaje_actual, reiniciar_jugando, volver_menu, x_puntajes, x_boton_derecha, y_puntajes, y_boton_derecha, usuario_caja_texto, color_usuario_boton, txt_usuario_boton, color_boton_guardar, guardar_puntaje, x_guardar, y_guardar, volver_atras):
     ventana.fill(fondo_ventana) # detras de la imagen fondo negro
     ventana.blit(imagen_fondo_oceano, (0,0)) # imagen fondo del tablero 
-    botones_menu_inactivos(nivel, jugar, puntajes_historicos, salir, ANCHO_PANTALLA) # Desactiva los botones del menu al comenzar el juego
+    botones_menu_inactivos(nivel, jugar, puntajes_historicos, salir, ANCHO_PANTALLA, volver_atras) # Desactiva los botones del menu al comenzar el juego
     botones_jugando_activos(salir_jugando, puntaje_actual, reiniciar_jugando, volver_menu, usuario_caja_texto, ANCHO_PANTALLA, x_puntajes, x_boton_derecha, guardar_puntaje, x_guardar, y_guardar)
     dibujar_botones_juego(ventana, color_boton_salir, color_boton_guardar, color_boton_puntaje, salir_jugando, puntaje_actual, reiniciar_jugando, volver_menu, x_puntajes, x_boton_derecha, y_puntajes, y_boton_derecha, usuario_caja_texto, color_usuario_boton, guardar_puntaje, x_guardar, y_guardar)
     limpia_usuario_texto(ventana, usuario_caja_texto, txt_usuario_boton)
@@ -435,26 +431,53 @@ def click_tablero(coordenadas_click, tamaño_tablero, ancho_casillero, ANCHO_PAN
 
     return puntajes_juego_dict
 
+# Ordenamiento de puntajes para mostrar por pantalla
 
-# VERIFICAR SI EL BARCO ESTA HUNDIDO PARA EL PUNTAJE
-""" 
-def validar_barco_hundido(id_barco, partes_barco_coordenadas) -> bool:
+def ordena_puntajes_historicos(puntajes_juego_dict):
+    lista_usuarios_ordenada = list(puntajes_juego_dict.items())
     
-    for parte in partes_barco_coordenadas:
-        id_barco = parte['id_barco']
-        if id_barco not in barcos:
-            barcos[id_barco] = []
-        barcos[id_barco].append(parte['parte_averiada'])
-        
-    for id_barco, partes in barcos.items():
-        hundido = True
-        for parte in partes:
-            if not parte: #not parte = True: True == True? >>> True 
-                hundido = False
-                break
+    for i in range(len(lista_usuarios_ordenada) - 1):
+        for j in range(i + 1, len(lista_usuarios_ordenada)):
+            if lista_usuarios_ordenada[i][1]["mejor_puntaje_historico"] < lista_usuarios_ordenada[j][1]["mejor_puntaje_historico"]:
+                # Intercambiamos las posiciones si es necesario
+                lista_usuarios_ordenada[i], lista_usuarios_ordenada[j] = lista_usuarios_ordenada[j], lista_usuarios_ordenada[i]
+    
+    # Seleccionamos los 3 primeros elementos de la lista ordenada
+    mejores_3 = []
+    for i in range(len(lista_usuarios_ordenada)):
+        if i < 3:
+            mejores_3.append(lista_usuarios_ordenada[i])
+    
+    retorno = [mejores_3, lista_usuarios_ordenada]
+    return retorno
 
-    return hundido
- """
+# Dibujamos una pantalla nueva para mostrar el historico de los puntajes
+def crear_pantalla_historicos (ventana, los_mejores_3, imagen_fondo_oceano, nivel, jugar, puntajes_historicos, salir, ANCHO_PANTALLA, volver_atras):
+    ventana.fill(fondo_ventana) # detras de la imagen fondo negro
+    ventana.blit(imagen_fondo_oceano, (0,0)) # imagen fondo del tablero 
+    botones_menu_inactivos(nivel, jugar, puntajes_historicos, salir, ANCHO_PANTALLA, volver_atras)
+    volver_atras = pygame.Rect(350, 500, 70, 50)
+    pygame.draw.rect(ventana, color_boton_volver_atras, volver_atras)  
+    volver_atras_txt = fuente_botones.render('MENU', True, color_letra_botones)
+    ventana.blit(volver_atras_txt, (volver_atras.x + 9, volver_atras.y + 12))
+    titulo = fuente_titulo.render("Top 3 Históricos", True, color_letra_titulo)
+    ventana.blit(titulo, (200, 50))
+    
+    # Dibujar el top 3 histórico
+    posicion_y = 150
+    for i in range (len(los_mejores_3)): # [('usuario1': {'puntaje1':12,'puntaje2':22,'puntaje3':32}),{}]
+        usuario_puntajes = los_mejores_3[i]
+        usuario = usuario_puntajes[0]
+        mejor_historico = usuario_puntajes[1]['mejor_puntaje_historico']
+        #print(mejor_historico)
+
+        texto = f"{i+1}. {usuario}: {mejor_historico}"
+        texto_renderizado = fuente_puntaje_actual.render(texto, True, color_letra_botones)
+        ventana.blit(texto_renderizado, (150, posicion_y))
+        posicion_y += 50
+        pygame.display.flip()
+     
+
 def validar_barco_hundido(id_barco, partes_barco_coordenadas) -> bool:
     # Evaluar si todas las partes del barco con el id proporcionado están averiadas
     for parte in partes_barco_coordenadas:
@@ -490,9 +513,6 @@ def obtener_partes_barco(id_barco, barcos_averiados, barcos_casilleros):
 
 
 ########################################################
-
-
-
 
 def crea_navios_automaticamente():
 
@@ -617,8 +637,3 @@ def comienza_juego(inicializar_matriz:callable, nivel:str):
         case 'Dificil':
             matriz =  inicializar_matriz(40,40,0) 
     return matriz
-
-
-
-
-

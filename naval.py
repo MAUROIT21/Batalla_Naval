@@ -61,6 +61,8 @@ jugar = pygame.Rect(x_boton + 150, y_boton, ancho_boton, alto_boton)
 puntajes_historicos = pygame.Rect(x_boton + 300, y_boton, ancho_boton, alto_boton)
 salir = pygame.Rect(x_boton + 450, y_boton, ancho_boton, alto_boton)
 
+volver_atras = pygame.Rect(350, 500, 70, 50)
+
 # Botones durante el juego (a la derecha del tablero)
 x_boton_derecha = ANCHO_PANTALLA - 150  # Margen derecho
 y_boton_derecha = 100
@@ -75,7 +77,6 @@ puntaje_actual = pygame.Rect(x_puntajes, y_puntajes, ancho_boton, alto_boton)
 reiniciar_jugando = pygame.Rect(x_boton_derecha, y_boton_derecha + 100, ancho_boton, alto_boton)
 volver_menu = pygame.Rect(x_boton_derecha, y_boton_derecha + 200, ancho_boton, alto_boton)
 usuario_caja_texto = pygame.Rect(x_caja_texto, y_caja_texto, ancho_boton + 90, alto_boton)
-
 guardar_puntaje = pygame.Rect(x_guardar, y_guardar, ancho_boton + 30, alto_boton-10)
 
 
@@ -138,7 +139,7 @@ while corriendo:
                 corriendo = False
             
             if puntajes_historicos.collidepoint(coordenadas_click):
-                pass
+                estado_pantalla = 'puntajes_historicos'
 
             if estado_pantalla == 'cargado':
                 usuario = ingreso_texto
@@ -152,7 +153,7 @@ while corriendo:
                     guardar_puntaje_json(puntajes_juego_partida)
                     estado_pantalla = 'inicio'
                 
-            if volver_menu.collidepoint(coordenadas_click):
+            if volver_menu.collidepoint(coordenadas_click) or volver_atras.collidepoint(coordenadas_click):
                 estado_pantalla = 'inicio'
                 
             if reiniciar_jugando.collidepoint(coordenadas_click):
@@ -181,9 +182,9 @@ while corriendo:
     # Estados del juego
     match estado_pantalla:
         case 'inicio':
-            menu_juego(ventana, imagen_barcos, nivel, jugar, puntajes_historicos, salir, color_boton_nivel, color_boton_jugar, color_boton_puntaje, color_boton_salir, y_boton, x_boton, salir_jugando, puntaje_actual, reiniciar_jugando, volver_menu, usuario_caja_texto, ANCHO_PANTALLA, txt_usuario_boton, guardar_puntaje)
+            menu_juego(ventana, imagen_barcos, nivel, jugar, puntajes_historicos, salir, color_boton_nivel, color_boton_jugar, color_boton_puntaje, color_boton_salir, y_boton, x_boton, salir_jugando, puntaje_actual, reiniciar_jugando, volver_menu, usuario_caja_texto, ANCHO_PANTALLA, txt_usuario_boton, guardar_puntaje, volver_atras)
         case 'inicia_juego':
-            datos_retorno_jugando = jugando(tamaño_tablero, ancho_casillero, ventana, imagen_fondo_oceano, nivel, jugar, puntajes_historicos, salir, ANCHO_PANTALLA, ALTO_PANTALLA, color_boton_salir, color_boton_puntaje, salir_jugando, puntaje_actual, reiniciar_jugando, volver_menu, x_puntajes, x_boton_derecha, y_puntajes, y_boton_derecha, usuario_caja_texto, color_usuario_boton, txt_usuario_boton, color_boton_guardar, guardar_puntaje, x_guardar, y_guardar)
+            datos_retorno_jugando = jugando(tamaño_tablero, ancho_casillero, ventana, imagen_fondo_oceano, nivel, jugar, puntajes_historicos, salir, ANCHO_PANTALLA, ALTO_PANTALLA, color_boton_salir, color_boton_puntaje, salir_jugando, puntaje_actual, reiniciar_jugando, volver_menu, x_puntajes, x_boton_derecha, y_puntajes, y_boton_derecha, usuario_caja_texto, color_usuario_boton, txt_usuario_boton, color_boton_guardar, guardar_puntaje, x_guardar, y_guardar, volver_atras)
             matriz_datos = datos_retorno_jugando[0]
             barcos_casilleros = datos_retorno_jugando[1]
             barcos_averiados = datos_retorno_jugando[2]
@@ -194,7 +195,21 @@ while corriendo:
         
         case 'cargado':
             pass
-      
+        
+        case 'puntajes_historicos':
+            ordenado = ordena_puntajes_historicos(puntajes_juego_dict)
+            los_mejores_3 = ordenado[0]
+            #print(los_mejores_3)
+            #print(len(los_mejores_3))            
+
+            crear_pantalla_historicos(ventana, los_mejores_3, imagen_fondo_oceano, nivel, jugar, puntajes_historicos, salir, ANCHO_PANTALLA, volver_atras)
+
+            estado_pantalla = 'ver_puntajes'
+            
+            # Cambia de pantalla, ejecuta el ordenamiento, muestra resultados e imprime en pantalla. Boton de volver (podria ser el mismo que el otro de Volver)
+        case 'ver_puntajes':
+            volver_atras.x = 350
+
         case 'saliendo':
             saliendo(usuario)
 
