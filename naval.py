@@ -118,8 +118,8 @@ while corriendo:
                     usuario = ingreso_texto
                     # guardar aqui el usuario y crear el nuevo dict{usuario} en puntajes_juego_dict{}
                     inicializa_usuario_nuevo(usuario, puntajes_juego_dict)
-                    print(puntajes_juego_dict)
-                    print("Usuario ingresado:", usuario)
+                    #print(puntajes_juego_dict)
+                    #print("Usuario ingresado:", usuario)
         txt_usuario_boton = ingresar_usuario_texto(ventana, usuario_caja_texto, ingreso_texto)
         pygame.display.update(usuario_caja_texto)
         
@@ -211,7 +211,7 @@ while corriendo:
             volver_atras.x = 350
 
         case 'saliendo':
-            saliendo(usuario)
+            saliendo()
 
 # Refresh de la pantalla de juego
     pygame.display.update()
