@@ -104,7 +104,7 @@ while corriendo:
             if usuario_caja_texto.collidepoint(pygame.mouse.get_pos()):  # Solo cuando el mouse está sobre la caja
                 largo_texto = len(ingreso_texto)
 
-                if largo_texto < 20:  
+                if largo_texto < 10:  
                     ingreso_texto += evento.text
                 else:
                     print('Texto supera el limite...')
@@ -129,7 +129,6 @@ while corriendo:
 
             if jugar.collidepoint(coordenadas_click):
                 usuario = ingreso_texto
-                #puntajes_juego = puntaje(usuario)
                 inicializa_marcador(usuario, puntajes_juego_dict, x_puntajes, y_puntajes, ventana, puntaje_actual)
 
                 estado_pantalla = 'inicia_juego'
@@ -147,9 +146,7 @@ while corriendo:
                 
                 if guardar_puntaje.collidepoint(coordenadas_click):
                     usuario = ingreso_texto
-                    print(usuario)
-                    
-                    #actualizar_puntaje(usuario, puntajes_juego_partida)
+                    print(usuario)                    
                     actualizar_puntaje_cierre(usuario, puntajes_juego_partida)
                     inicializa_marcador(usuario, puntajes_juego_partida, x_puntajes, y_puntajes, ventana, puntaje_actual)
                     guardar_puntaje_json(puntajes_juego_partida)
@@ -161,9 +158,7 @@ while corriendo:
             if reiniciar_jugando.collidepoint(coordenadas_click):
                 estado_pantalla = 'inicia_juego'
             
-            
-
-    #Eventos de colores
+    # Eventos de colores
     # De los botones
     mouse_x, mouse_y = pygame.mouse.get_pos()
     if nivel.collidepoint(mouse_x, mouse_y):
@@ -199,15 +194,9 @@ while corriendo:
         
         case 'cargado':
             pass
-        case 'pausa':
-            pass
-
-        case 'reinicia':
-            pass
-        
+      
         case 'saliendo':
-            """ Pedir el nombre de usuario del jugador antes de salir """
-            saliendo('mauro')
+            saliendo(usuario)
 
 # Refresh de la pantalla de juego
     pygame.display.update()

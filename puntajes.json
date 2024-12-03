@@ -33,5 +33,15 @@
         "ultimo_puntaje": 23,
         "mejor_puntaje_historico": 23,
         "puntaje_actual": 0
+    },
+    "dec": {
+        "ultimo_puntaje": 176,
+        "mejor_puntaje_historico": 176,
+        "puntaje_actual": 0
+    },
+    "erddd": {
+        "ultimo_puntaje": 82,
+        "mejor_puntaje_historico": 82,
+        "puntaje_actual": 0
     }
 }

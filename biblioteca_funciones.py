@@ -306,23 +306,6 @@ def dibuja_rects(tamaño_tablero, ancho_casillero, ventana, posicion_x, posicion
 
         
 # PUNTAJES
-""" def puntaje(usuario)-> list[dict]:
-    puntajes = []
-
-    for puntaje_usuario in puntajes:
-        if puntaje_usuario['usuario'] == usuario:
-            return puntajes # si ya existe el usuario devuelve la lista entera
-    # Sino estaba el usuario lo crea    
-    puntaje_usuario = {'usuario': usuario, 'ultimo_puntaje': 0, 'mejor_puntaje_historico': 0, 'puntaje_actual': 0}
-    puntajes.append(puntaje_usuario)
-    return puntajes """
-
-""" def puntaje(usuario)-> list[dict]:
-    puntajes = []
-    puntaje_usuario = {'usuario': usuario, 'ultimo_puntaje': int, 'mejor_puntaje_historico': int, 'puntaje_actual': 0}
-    puntajes.append(puntaje_usuario)
-    
-    return puntajes """
 
 def actualizar_puntaje(usuario, puntajes, nuevo_puntaje):
     # Buscamos al usuario en la lista de puntajes
@@ -345,8 +328,6 @@ def actualiza_marcador(puntajes, ventana, puntaje_actual, x_puntajes, y_puntajes
     return actualizado
 
 def inicializa_marcador(usuario, puntajes, x_puntajes, y_puntajes, ventana, puntaje_actual):
-    #puntajes[usuario]['puntaje_actual'] = 0
-    #marcador_inicializado = puntajes[usuario]['puntaje_actual']
     marcador_inicializado = '000'
     pygame.draw.rect(ventana, color_boton_puntaje, puntaje_actual)
     txt_puntaje_actualizado = fuente_puntaje_actual.render(marcador_inicializado, False, color_letra_puntaje)
@@ -360,8 +341,7 @@ def actualizar_puntaje_cierre(usuario, puntajes_juego_partida):
         "mejor_puntaje_historico": 0,
         "puntaje_actual": 0
             }
-    #if puntajes_juego_partida[usuario]['ultimo_puntaje'] == 0: # Se acaba de guardar sin tocar casillero o bien la ultima partida quedo en 0
-        #pass
+
     else:
         puntajes_juego_partida[usuario]['ultimo_puntaje'] = puntajes_juego_partida[usuario]['puntaje_actual']
         # poner puntaje actual en cero
@@ -387,7 +367,6 @@ def guardar_puntaje_json (puntajes_juego, ruta= 'teoria_juegos/Batalla_Naval/pun
         json.dump(puntajes_juego, archivo, indent=4)
     
 
-
 # MODIFICA LA MATRIZ AL TOCAR UN BARCO
 def modifica_matriz_disparos(matriz, barco)-> list:
     fila = barco['fila']
@@ -410,17 +389,16 @@ def click_tablero(coordenadas_click, tamaño_tablero, ancho_casillero, ANCHO_PAN
             
             if barco_valor != 0:  # Si hay un barco
                 if barco_valor == 9: # Si ya estaba tocado/averiado
-                    print(f' Barco averiado! en las coordenadas: {rect_seleccionado.x, rect_seleccionado.y}')
-                else:
-                    print(f' Tocaste un barco en las coordenadas: {rect_seleccionado.x, rect_seleccionado.y} ')
+                    #print(f' Barco averiado! en las coordenadas: {rect_seleccionado.x, rect_seleccionado.y}')
+                    pass
+                else: # Barco tocado
+                    #print(f' Tocaste un barco en las coordenadas: {rect_seleccionado.x, rect_seleccionado.y} ')
                     #print(f' El barco es: {casillero_tocado} ')
                     barcos_casilleros[i]['valor'] = 9 # uso 9 para barcos tocados/heridos
                     # Modifica la matriz de barcos
                     matriz_modificada = modifica_matriz_disparos(matriz, casillero_tocado)
-                    
-                    # MODIFICAR EL COLOR AL RECT que contiene el texto
+                    # MODIFICAR EL COLOR al barco tocado
                     pygame.draw.rect(ventana, color_barco_tocado, rect_seleccionado)  
-
                     # MODIFICA EL PUNTAJE DEL USUARIO
                     nuevo_puntaje = 5
                     actualizar_puntaje(usuario, puntajes_juego_dict, nuevo_puntaje)
@@ -428,9 +406,7 @@ def click_tablero(coordenadas_click, tamaño_tablero, ancho_casillero, ANCHO_PAN
 
                     # Busca el id_barco tocado para validar si esta hundido o no
                     for j in range (len(partes_barco_coordenadas)):
-                        #print(j)
                         if posicion_fila_columna == partes_barco_coordenadas[j]['coordenadas']:
-                            print(j)
                             partes_barco_coordenadas[j]['parte_averiada'] = True # Marco la parte averiada
                             id_barco_tocado = partes_barco_coordenadas[j]['id_barco']
                             #print(f'>>> id_barco_tocado : {id_barco_tocado}')
@@ -438,7 +414,6 @@ def click_tablero(coordenadas_click, tamaño_tablero, ancho_casillero, ANCHO_PAN
                             # Valida si esta hundido
                             hundido = validar_barco_hundido(id_barco_tocado, partes_barco_coordenadas)
                             #print(f'>>> Barco hundido : {hundido}')
-
                             # Actualiza el puntaje
                             if hundido:
                                 puntaje_hundido = 10 * partes_barco_coordenadas[j]['partes_del_barco'][1]
